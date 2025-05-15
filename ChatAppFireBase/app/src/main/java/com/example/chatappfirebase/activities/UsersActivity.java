@@ -25,13 +25,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+
+// Màn hình hiển thị danh sách người dùng trong ứng dụng chat, cho phép người dùng tìm kiếm và chọn người để bắt đầu cuộc
+// trò chuyện. File cũng cung cấp chức năng quét mã QR (chuyển đến ScanQrActivity) để thêm bạn bè.
+// Triển khai interface UserListener để xử lý sự kiện khi nhấp vào một người dùng.
 public class UsersActivity extends BaseActivity implements UserListener {
 
     private ActivityUsersBinding binding;
 
     private PreferenceManager preferenceManager;
-
-    private ArrayList friendsArrayList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,7 @@ public class UsersActivity extends BaseActivity implements UserListener {
         });
     }
 
-
+    // Lấy danh sách người dùng từ Firestore và hiển thị trong RecyclerView
     private void getUsers() {
         loading(true);
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -83,10 +85,16 @@ public class UsersActivity extends BaseActivity implements UserListener {
                 .get()
                 .addOnCompleteListener(task -> {
                     loading(false);
+
+                    // Truy vấn collection KEY_COLLECTION_USERS để lấy tất cả người dùng.
+                    // Lọc người dùng hiện tại (currentUserId) ra khỏi danh sách.
+                    // Lọc theo tên dựa trên văn bản tìm kiếm (searchText) từ SeachEditText.
                     String currentUserId = preferenceManager.getString(Constants.KEY_USER_ID);
                     String searchText = Objects.requireNonNull(binding.SeachEditText).getText().toString().trim().toLowerCase();
                     if (task.isSuccessful() && task.getResult() != null) {
                         List<User> users = new ArrayList<>();
+
+                        // Tạo danh sách users chứa các đối tượng User với thông tin name, email, image, token, và id.
                         for (QueryDocumentSnapshot queryDocumentSnapshot : task.getResult()) {
                             if (currentUserId.equals(queryDocumentSnapshot.getId())) {
                                 continue;
@@ -101,6 +109,8 @@ public class UsersActivity extends BaseActivity implements UserListener {
                                 users.add(user);
                             }
                         }
+
+                        // Nếu tìm thấy người dùng khớp với searchText, tạo UsersAdapter và gắn vào usersRecyclerView.
                         if (users.size() > 0) {
                             UsersAdapter usersAdapter = new UsersAdapter(users, this);
                             binding.usersRecyclerView.setAdapter(usersAdapter);
@@ -127,6 +137,8 @@ public class UsersActivity extends BaseActivity implements UserListener {
     }
 
     @Override
+    // Khi người dùng nhấp vào một người trong danh sách, tạo Intent để chuyển đến ChatActivity, truyền thông tin
+    // người dùng (User) qua KEY_USER.
     public void onUserClicked(User user) {
         Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
         intent.putExtra(Constants.KEY_USER, user);

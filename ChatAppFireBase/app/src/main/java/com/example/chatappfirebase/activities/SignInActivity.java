@@ -28,8 +28,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+//Màn hình đăng nhập của ứng dụng Android, cho phép người dùng đăng nhập bằng email và mật khẩu thông qua
+//Firebase Authentication. File cũng hỗ trợ chức năng quên mật khẩu (gửi email đặt lại mật khẩu) và chuyển hướng đến màn hình
+//đăng ký. Nó kiểm tra trạng thái đăng nhập, hiển thị giao diện toàn màn hình và lưu thông tin người dùng
+//vào PreferenceManager sau khi đăng nhập thành công.
 public class SignInActivity extends AppCompatActivity {
     private ActivitySignInBinding binding;
+
+    // Đối tượng quản lý dữ liệu lưu trữ cục bộ, dùng để kiểm tra trạng thái đăng nhập và lưu thông tin người dùng.
     private PreferenceManager preferenceManager;
 
     @Override
@@ -39,6 +45,7 @@ public class SignInActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
 
         preferenceManager = new PreferenceManager(getApplicationContext());
+        // Nếu người dùng đã đăng nhập, chuyển ngay đến MainActivity và đóng SignInActivity.
         if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
@@ -122,6 +129,8 @@ public class SignInActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            // Nếu đăng nhập thành công:
+                            // Lấy userId từ FirebaseAuth.
                             String userid = firebaseAuth.getCurrentUser().getUid();
                             database.collection(Constants.KEY_COLLECTION_USERS)
                                     .document(userid)

@@ -12,17 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
-//public class Config extends Application {
-//    @Override
-//    public void onCreate() {
-//        super.onCreate();
-//        MediaManager.init(this, new HashMap<String, String>() {{
-//            put("cloud_name", "daqprv02j");
-//            put("secure", "true");
-//        }});
-//    }
-//}
-
 public class Config extends Application {
     private static Properties cloudinaryProperties;
 

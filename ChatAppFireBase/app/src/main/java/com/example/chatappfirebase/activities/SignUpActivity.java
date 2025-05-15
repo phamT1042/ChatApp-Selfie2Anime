@@ -30,6 +30,9 @@ import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.util.HashMap;
 
+// Màn hình đăng ký của ứng dụng Android, cho phép người dùng tạo tài khoản mới bằng cách nhập tên, email, mật khẩu,
+// xác nhận mật khẩu và chọn ảnh hồ sơ. File sử dụng Firebase Authentication để tạo tài khoản và Firebase Firestore
+// để lưu thông tin người dùng. Sau khi đăng ký thành công, người dùng được chuyển hướng về SignInActivity
 public class SignUpActivity extends AppCompatActivity {
 
     private ActivitySignUpBinding binding;

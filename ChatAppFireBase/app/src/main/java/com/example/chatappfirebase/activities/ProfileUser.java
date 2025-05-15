@@ -33,12 +33,13 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.HashMap;
 
+// màn hình hiển thị thông tin hồ sơ người dùng trong ứng dụng chat. File hiển thị tên, email, ảnh hồ sơ và mã QR
+// dựa trên KEY_USER_ID. Nó cũng cung cấp các chức năng như quay lại, đăng xuất và chuyển hướng đến màn hình đổi mật khẩu.
 public class ProfileUser extends BaseActivity {
     private TextView name, email;
     private RoundedImageView imageView;
     private PreferenceManager preferenceManager;
     private TextView butback, butsignout, butChangePass;
-    private AppCompatImageView profile;
     private ImageView qrCodeIm;
 
     @Override
@@ -54,10 +55,10 @@ public class ProfileUser extends BaseActivity {
         butsignout = findViewById(R.id.SignOutBut);
         butChangePass = findViewById(R.id.changePasswordView);
 
-
         email.setText(preferenceManager.getString(Constants.KEY_EMAIL));
         name.setText(preferenceManager.getString(Constants.KEY_NAME));
 
+        // Giải mã chuỗi Base64 từ KEY_IMAGE thành Bitmap và hiển thị trong imageView
         byte[] bytes = android.util.Base64.decode(preferenceManager.getString(Constants.KEY_IMAGE), android.util.Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
         imageView.setImageBitmap(bitmap);
@@ -69,6 +70,10 @@ public class ProfileUser extends BaseActivity {
     }
 
     private void createQR() {
+        // Tạo mã QR dựa trên KEY_USER_ID:
+        // Lấy kích thước màn hình để xác định kích thước mã QR (3/4 kích thước nhỏ nhất của chiều rộng hoặc chiều cao).
+        // Gọi generateQRCode với KEY_USER_ID và kích thước 900px.
+        // Đặt mã QR vào qrCodeIm.
         qrCodeIm = findViewById(R.id.idIVQrcode);
         WindowManager manager = (WindowManager) getSystemService(WINDOW_SERVICE);
         Display display = manager.getDefaultDisplay();
@@ -81,8 +86,6 @@ public class ProfileUser extends BaseActivity {
 
         try {
             Bitmap bitmap = generateQRCode(preferenceManager.getString(Constants.KEY_USER_ID), 900);
-
-
             qrCodeIm.setImageBitmap(bitmap);
         } catch (Exception e) {
             e.printStackTrace();
@@ -90,8 +93,13 @@ public class ProfileUser extends BaseActivity {
     }
 
     private Bitmap generateQRCode(String data, int dimension) throws Exception {
+        // Sử dụng MultiFormatWriter từ thư viện ZXing để mã hóa dữ liệu thành BitMatrix với định dạng BarcodeFormat.QR_CODE.
         MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+
+        // BitMatrix là một ma trận 2D của các giá trị true (pixel đen) và false (pixel trắng)
         BitMatrix bitMatrix = multiFormatWriter.encode(data, BarcodeFormat.QR_CODE, dimension, dimension);
+
+        // Một Bitmap trống, sẵn sàng để vẽ mã QR lên
         Bitmap bitmap = Bitmap.createBitmap(dimension, dimension, Bitmap.Config.ARGB_8888);
 
         // Tạo một đối tượng Paint để tô màu cho mã QR
@@ -100,9 +108,10 @@ public class ProfileUser extends BaseActivity {
         paint.setStyle(Paint.Style.FILL);
 
         Canvas canvas = new Canvas(bitmap);
-        canvas.drawRect(0, 0, dimension, dimension, paint); // Tô màu nền
+        canvas.drawRect(0, 0, dimension, dimension, paint); // Tô màu nền trắng toàn bộ bitmap
 
-        paint.setColor(Color.BLACK); // Màu sắc của mã QR (viền)
+        paint.setColor(Color.BLACK); // Đặt màu đen cho các điểm mã QR
+        // Vẽ các điểm đen lên Bitmap
         for (int i = 0; i < dimension; i++) {
             for (int j = 0; j < dimension; j++) {
                 if (bitMatrix.get(i, j)) {
@@ -149,15 +158,6 @@ public class ProfileUser extends BaseActivity {
                 Intent intent = new Intent(ProfileUser.this, ChangePassword.class);
                 startActivity(intent);
                 finish();
-            }
-        });
-    }
-
-    private void infFriend() {
-        profile.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
             }
         });
     }

@@ -92,14 +92,24 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+// Đây là màn hình chính để người dùng trò chuyện với một người dùng khác (người nhận, receiverUser). File hỗ trợ gửi tin
+// nhắn văn bản, gửi ảnh, chuyển đổi ảnh thành phong cách anime bằng mô hình TensorFlow Lite, và hiển thị thông tin hồ
+// sơ bạn bè. Sử dụng Firebase Firestore để lưu trữ và lắng nghe tin nhắn, Firebase Storage/Cloudinary để tải ảnh.
 public class ChatActivity extends BaseActivity {
 
     private ActivityChatBinding binding;
+    // Thông tin người nhận (tên, email, ảnh, ID)
     private User receiverUser;
+
+    // Danh sách tin nhắn trong cuộc trò chuyện.
     private List<ChatMessage> chatMessages;
+
+    // Adapter để hiển thị tin nhắn trong RecyclerView
     private ChatAdapter chatAdapter;
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
+
+    // ID của cuộc trò chuyện trong Firestore
     private String conversionId = null;
     private final OnCompleteListener<QuerySnapshot> completeListener = task -> {
         if (task.isSuccessful() && task.getResult() != null && task.getResult().getDocuments().size() > 0) {
@@ -162,6 +172,7 @@ public class ChatActivity extends BaseActivity {
             checkForConversion();
         }
     };
+    // Trạng thái trực tuyến của người nhận
     private Boolean isReceiverAvailable = false;
     private FirebaseStorage storage;
     private StorageReference storageReference;
@@ -173,7 +184,7 @@ public class ChatActivity extends BaseActivity {
     private AppCompatImageView profile;
     private Interpreter tflite; // TensorFlow Lite Interpreter
     private ExecutorService executorService; // Thread pool để chạy suy luận
-    private Bitmap animeBitmap; // Lưu ảnh anime tạm thời
+    private Bitmap animeBitmap; // Lưu ảnh anime tạm thời sau chuyển đổi
 
     // New constants for camera
     private static final int REQUEST_CAMERA = 30;

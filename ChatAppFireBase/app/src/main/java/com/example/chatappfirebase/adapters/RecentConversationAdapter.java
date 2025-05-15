@@ -23,6 +23,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.List;
 import java.util.Objects;
 
+// Đây là một RecyclerView.Adapter dùng để hiển thị danh sách các cuộc trò chuyện gần đây (recent conversations)
+// trong MainActivity. Adapter hiển thị tên người dùng, tin nhắn cuối cùng, ảnh hồ sơ, và
+// trạng thái trực tuyến (KEY_AVAILABILITY) của người dùng khác trong cuộc trò chuyện. Khi người dùng nhấp vào một
+// cuộc trò chuyện, ConversionListener được gọi để chuyển đến ChatActivity
 public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConversationAdapter.ConversionViewHolder> {
 
     private final List<ChatMessage> chatMessages;
@@ -51,6 +55,7 @@ public class RecentConversationAdapter extends RecyclerView.Adapter<RecentConver
     }
 
     @Override
+    // Gắn dữ liệu cho cuộc trò chuyện tại vị trí position và lắng nghe trạng thái trực tuyến của người dùng khác.
     public void onBindViewHolder(@NonNull ConversionViewHolder holder, int position) {
         holder.setData(chatMessages.get(position));
         holder.listenAvailabilityOfUser(chatMessages.get(position));

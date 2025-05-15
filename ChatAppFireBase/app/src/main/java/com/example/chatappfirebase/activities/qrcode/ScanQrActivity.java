@@ -35,15 +35,15 @@ import com.example.chatappfirebase.databinding.ActivityUsersBinding;
 
 import com.example.chatappfirebase.utilities.PreferenceManager;
 
-
+// Màn hình quét mã QR trong ứng dụng chat, cho phép người dùng quét mã QR (chứa KEY_USER_ID) để tìm và bắt đầu
+// trò chuyện với người dùng tương ứng. File sử dụng thư viện ZXing để quét mã QR, truy vấn Firestore để lấy danh sách
+// người dùng, và chuyển hướng đến ChatActivity nếu tìm thấy người dùng khớp với ID từ mã QR.
 public class ScanQrActivity extends AppCompatActivity {
 
-
-    private ActivityUsersBinding binding;
-
-    private PreferenceManager preferenceManager;
-
+    // Danh sách chứa tất cả người dùng từ Firestore, dùng để tìm kiếm người dùng khớp với ID từ mã QR.
     private ArrayList<User> friendsArrayList = new ArrayList<>();
+
+    // Lưu trữ kết quả quét mã QR (chuỗi KEY_USER_ID)
     private String ans;
     private ImageView scan;
 
@@ -108,10 +108,10 @@ public class ScanQrActivity extends AppCompatActivity {
         options.setPrompt("Volume up to flash on");
         options.setBeepEnabled(true);
         options.setOrientationLocked(true);
+        // Sử dụng CaptureAct (một lớp tùy chỉnh của ZXing) để quét.
         options.setCaptureActivity(CaptureAct.class);
+        // mở giao diện quét.
         barLaucher.launch(options);
-
-
     }
 
     ActivityResultLauncher<ScanOptions> barLaucher = registerForActivityResult(new ScanContract(), result ->
@@ -121,12 +121,10 @@ public class ScanQrActivity extends AppCompatActivity {
             ans = result.getContents().toString();
             for (User x : friendsArrayList) {
                 if (x.id.toString().trim().equals(ans.toString().trim())) {
-
-
+                    // Nếu tìm thấy, tạo Intent để chuyển đến ChatActivity, truyền đối tượng User qua KEY_USER, và khởi động Activity.
                     Intent intent = new Intent(getApplicationContext(), ChatActivity.class);
                     intent.putExtra(Constants.KEY_USER, x);
                     startActivity(intent);
-
                     break;
                 }
             }

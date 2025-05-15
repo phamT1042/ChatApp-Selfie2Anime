@@ -20,6 +20,7 @@ import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+// Màn hình đổi mật khẩu
 public class ChangePassword extends AppCompatActivity {
     private PreferenceManager preferenceManager;
     private AppCompatButton changePassword;

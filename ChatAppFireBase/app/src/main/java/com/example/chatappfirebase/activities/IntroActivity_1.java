@@ -16,6 +16,10 @@ import android.widget.Toast;
 
 import com.example.chatappfirebase.R;
 
+//Màn hình khởi động (splash screen) của ứng dụng Android, hiển thị logo và biểu tượng tải (loading icon) với hiệu ứng
+//trong 2,5 giây trước khi chuyển sang IntroActivity_2. File này thiết lập giao diện toàn màn hình, ẩn thanh điều hướng và áp
+//dụng các hiệu ứng để cải thiện trải nghiệm người dùng khi ứng dụng khởi chạy.
+
 public class IntroActivity_1 extends AppCompatActivity {
 
     Animation topAnim, rotateAnim;

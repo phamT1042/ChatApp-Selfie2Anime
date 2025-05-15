@@ -18,17 +18,24 @@ import com.example.chatappfirebase.R;
 import com.example.chatappfirebase.utilities.Constants;
 import com.example.chatappfirebase.utilities.PreferenceManager;
 
+//Màn hình giới thiệu thứ hai của ứng dụng Android, hoạt động như một màn hình chào mừng/điểm chuyển hướng.
+//File kiểm tra trạng thái đăng nhập của người dùng và cung cấp các nút điều hướng đến đăng nhập, đăng ký, hoặc trợ giúp.
 public class IntroActivity_2 extends AppCompatActivity {
 
     ImageView img_touch;
     TextView text_touch;
+
+    //    Đối tượng dùng để quản lý các tham số của ứng dụng, như trạng thái đăng nhập.
     private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         preferenceManager = new PreferenceManager(getApplicationContext());
+
+        // Kiểm tra xem người dùng đã đăng nhập chưa bằng cách đọc khóa KEY_IS_SIGNED_IN từ PreferenceManager.
         if (preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN)) {
+            // Nếu đã đăng nhập, chuyển hướng ngay đến MainActivity
             Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             startActivity(intent);
             finish();
